@@ -103,6 +103,10 @@ typedef struct http_headers_s* http_headers_ref;
 /// HTTP server control object
 typedef struct http_server_s* http_server_ref;
 
+/// HTTP server central route callback
+typedef http_headers_ref (*http_callback_t)(const http_headers_ref,
+                                            void*);
+
 //
 // http_headers_ref: HTTP headers methods
 //
@@ -146,6 +150,10 @@ void http_headers_release(http_headers_ref headers);
 
 http_server_ref http_server_init_ipv4(const char* ipAddress,
                                       const http_port_t ipPort);
+
+void http_server_set_callback(http_server_ref server,
+                              const http_callback_t cb,
+                              void* additionalData);
 
 bool http_server_listen(http_server_ref server);
 

@@ -28,6 +28,11 @@ struct http_server_s {
     
     // main listening socket
     int mainSocket;
+    
+    // callback called on every request
+    http_callback_t requestCB;
+    // custom dev data passed to every callback call
+    void* cbData;
 };
 
 struct sockaddr_in http_make_ipv4(const char* ipAddress,

@@ -141,6 +141,19 @@ http_server_ref http_server_init_ipv4(const char* ipAddress,
     return result;
 }
 
+void http_server_set_callback(http_server_ref server,
+                              const http_callback_t cb,
+                              void* additionalData) {
+    if (!server) {
+        HI_DEBUG("NULL server instance, no reason to continue");
+        return;
+    }
+    
+    // set data & callback
+    server->cbData = additionalData;
+    server->requestCB = cb;
+}
+
 bool http_server_listen(http_server_ref server) {
     if (!server) {
         HI_DEBUG("NULL server parameter specified");
@@ -211,28 +224,42 @@ bool http_server_listen(http_server_ref server) {
                     HI_DEBUG("headers:");
                     http_headers_debug_dump(request);
                     
-                    // prepare and send response
+                    // prepare for response
                     
-                    const char* userAgentString = http_headers_get(request, "User-Agent");
-                    char* resp = calloc(300, sizeof(char));
-                    
-                    sprintf(resp, "Your user agent is %s.", HI_IF_NULL(userAgentString, "unknown, sorry for that"));
-                    
-                    // don't need the headers anymore
-                    http_headers_release(request);
-                    
-                    // notice that response DEALLOCATES THE BODY ON ITS OWN
-                    http_headers_ref response = http_headers_init_with_response(200, "text/plain", resp, (http_size_t)strlen(resp), free);
-                    
+                    http_headers_ref response = NULL;
+                    char* headersSent = NULL;
                     http_size_t headersSentSize = 0;
-                    char* headersSent = http_headers_get_response(response, &headersSentSize);
                     
-                    // send data
+                    if (server->requestCB) {
+                        response = server->requestCB(request, server->cbData);
+                        
+                        if (!response) {
+                            perror("Callback returned NULL, HTTP server will send 500 Internal Server Error!");
+                            perror("If you're the developer of this application, please keep in mind that the HTTP server callback must NEVER return NULL.");
+                            
+                            // dummy response
+                            response = http_headers_init_with_response(500, "text/plain", strdup("error"), 5, free);
+                        }
+                    } else {
+                        const char* staticText = "<h1>Congrats, the server is up!</h1><br> Don't forget to add a callback to handle your own requests.";
+                        
+                        response = http_headers_init_with_response(200, "text/html", strdup(staticText), (http_size_t)strlen(staticText), free);
+                    }
+                    
+                    headersSent = http_headers_get_response(response, &headersSentSize);
+                    
+                    // send headers
                     send(checkedSocket, headersSent, headersSentSize, 0);
+                    
+                    // send body
+                    http_size_t respSize = 0;
+                    void* resp = http_headers_get_body(response, &respSize);
+                    
                     send(checkedSocket, resp, strlen(resp), 0);
                     
-                    // goodbye, response
+                    // goodbye, response and request
                     http_headers_release(response);
+                    http_headers_release(request);
                     
                     // TODO: support other responses
                     // TODO: handle properly
