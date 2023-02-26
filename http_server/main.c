@@ -22,7 +22,7 @@ http_headers_ref main_callback(const http_headers_ref request,
 }
 
 int main() {
-    http_server_ref server = http_server_init_ipv4(HTTP_ADDRESS_PUBLIC, 5454);
+    http_server_ref server = http_server_init_ipv6(HTTP_ADDRESS_PUBLIC_IPV6, 5454);
     http_server_set_callback(server, main_callback, NULL);
     http_server_listen(server);
     http_server_release(server);

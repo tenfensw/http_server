@@ -33,6 +33,22 @@ struct sockaddr_in http_make_ipv4(const char* ipAddress,
     return result;
 }
 
+struct sockaddr_in6 http_make_ipv6(const char* ipAddress,
+                                  const http_port_t ipPort) {
+    struct sockaddr_in6 result;
+    bzero(&result, sizeof(struct sockaddr_in6));
+    
+    // parse the IP address first
+    // TODO: handle errors correctly
+    inet_pton(AF_INET6, HI_IF_NULL(ipAddress, HTTP_ADDRESS_PUBLIC_IPV6), &result.sin6_addr);
+    
+    // adjust port properly
+    result.sin6_port = htons(ipPort);
+    
+    return result;
+}
+
+
 void http_getpeerinfo(int sk, char** ipAddressPtr, http_port_t* portPtr) {
     struct sockaddr_in ipv4;
     bzero(&ipv4, sizeof(struct sockaddr_in));
@@ -103,12 +119,9 @@ bool http_server_init_socket(http_server_ref result, bool isIPv6) {
     return true;
 }
 
-//
-// public
-//
-
-http_server_ref http_server_init_ipv4(const char* ipAddress,
-                                      const http_port_t ipPort) {
+http_server_ref http_server_init(const char* ipAddress,
+                                 const http_port_t ipPort,
+                                 const bool useIPv6) {
     http_server_ref result = hizalloc_struct(http_server_s);
     result->clientsMax = HTTP_CLIENTS_MAX;
     
@@ -122,8 +135,12 @@ http_server_ref http_server_init_ipv4(const char* ipAddress,
     }
     
     // import IPv4 listen address
-    result->useIPv6 = false;
-    result->ipv4 = http_make_ipv4(ipAddress, ipPort);
+    result->useIPv6 = useIPv6;
+    
+    if (useIPv6)
+        result->ipv6 = http_make_ipv6(ipAddress, ipPort);
+    else
+        result->ipv4 = http_make_ipv4(ipAddress, ipPort);
     
     // bind when possible
     if (bind(result->mainSocket, (struct sockaddr*)&result->ipv4, sizeof(result->ipv4)) != 0) {
@@ -137,8 +154,22 @@ http_server_ref http_server_init_ipv4(const char* ipAddress,
     result->clientsFDs = http_fd_set_init(result->clientsMax);
     http_fd_set_set_main_socket(result->clientsFDs, result->mainSocket);
     
-    HI_DEBUG("hello world, ipv4 HTTP server initialized, <%p>", result);
+    HI_DEBUG("hello world, ipv%u HTTP server initialized, <%p>", useIPv6 ? 6 : 4, result);
     return result;
+}
+
+//
+// public
+//
+
+http_server_ref http_server_init_ipv4(const char* ipAddress,
+                                      const http_port_t ipPort) {
+    return http_server_init(ipAddress, ipPort, false);
+}
+
+http_server_ref http_server_init_ipv6(const char* ipAddress,
+                                      const http_port_t ipPort) {
+    return http_server_init(ipAddress, ipPort, true);
 }
 
 void http_server_set_callback(http_server_ref server,

@@ -32,6 +32,9 @@
 #define HTTP_ADDRESS_LOCALHOST "127.0.0.1"
 #define HTTP_ADDRESS_PUBLIC "0.0.0.0"
 
+#define HTTP_ADDRESS_LOCALHOST_IPV6 "::1"
+#define HTTP_ADDRESS_PUBLIC_IPV6 "::"
+
 //
 // primitive types
 //
@@ -178,6 +181,11 @@ void http_headers_release(http_headers_ref headers);
 /// initializes a new instance of the HTTP server object listening on the specified
 /// IPv4 address
 http_server_ref http_server_init_ipv4(const char* ipAddress,
+                                      const http_port_t ipPort);
+
+/// initializes a new instance of the HTTP server object listening on the specified
+/// IPv6 address
+http_server_ref http_server_init_ipv6(const char* ipAddress,
                                       const http_port_t ipPort);
 
 ///
