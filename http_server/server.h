@@ -33,4 +33,7 @@ struct http_server_s {
 struct sockaddr_in http_make_ipv4(const char* ipAddress,
                                   const http_port_t ipPort);
 
+void http_getpeerinfo(int sk, char** ipAddressPtr, http_port_t* portPtr);
+void http_getpeerinfo6(int sk, char** ipAddressPtr, http_port_t* portPtr);
+
 bool http_server_init_socket(http_server_ref result, bool isIPv6);

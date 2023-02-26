@@ -33,6 +33,13 @@ char* hi_make_current_datetime() {
     return result;
 }
 
+char* hiitoa(const http_ssize_t value) {
+    char* result = calloc(10, sizeof(char));
+    sprintf(result, "%d", value);
+    
+    return result;
+}
+
 void hiprintf(const char* fn, const http_size_t fc,
               const char* msg, ...) {
 #ifndef DEBUG

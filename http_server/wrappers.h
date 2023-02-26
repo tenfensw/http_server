@@ -26,6 +26,9 @@ void* hizalloc(const http_size_t size);
 void hiprintf(const char* fn, const http_size_t fc,
               const char* msg, ...);
 
+/// int -> string
+char* hiitoa(const http_ssize_t value);
+
 #define HI_DATETIME_MAX 30
 
 /// make current date-time string

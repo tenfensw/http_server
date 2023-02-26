@@ -33,6 +33,58 @@ struct sockaddr_in http_make_ipv4(const char* ipAddress,
     return result;
 }
 
+void http_getpeerinfo(int sk, char** ipAddressPtr, http_port_t* portPtr) {
+    struct sockaddr_in ipv4;
+    bzero(&ipv4, sizeof(struct sockaddr_in));
+    
+    socklen_t length = sizeof(ipv4);
+    
+    if (getpeername(sk, (struct sockaddr*)&ipv4, &length) == 0) {
+        // success
+        
+        // convert to IPv4
+        char* ipAddress = calloc(INET_ADDRSTRLEN, sizeof(char));
+        inet_ntop(AF_INET, &ipv4, ipAddress, length);
+        
+        // obtain port
+        http_port_t port = ntohs(ipv4.sin_port);
+        
+        // save values
+        if (ipAddressPtr)
+            (*ipAddressPtr) = ipAddress;
+        
+        if (portPtr)
+            (*portPtr) = port;
+    } else
+        HI_ERRNO_DEBUG("getpeername failed (ipv4)");
+}
+
+void http_getpeerinfo6(int sk, char** ipAddressPtr, http_port_t* portPtr) {
+    struct sockaddr_in6 ipv6;
+    bzero(&ipv6, sizeof(struct sockaddr_in6));
+    
+    socklen_t length = sizeof(ipv6);
+    
+    if (getpeername(sk, (struct sockaddr*)&ipv6, &length) == 0) {
+        // success
+        
+        // convert to IPv4
+        char* ipAddress = calloc(INET6_ADDRSTRLEN, sizeof(char));
+        inet_ntop(AF_INET6, &ipv6, ipAddress, length);
+        
+        // obtain port
+        http_port_t port = ntohs(ipv6.sin6_port);
+        
+        // save values
+        if (ipAddressPtr)
+            (*ipAddressPtr) = ipAddress;
+        
+        if (portPtr)
+            (*portPtr) = port;
+    } else
+        HI_ERRNO_DEBUG("getpeername failed (ipv6)");
+}
+
 bool http_server_init_socket(http_server_ref result, bool isIPv6) {
     // init main socket
     result->mainSocket = socket(isIPv6 ? AF_INET6 : AF_INET, SOCK_STREAM, 0);
@@ -138,11 +190,52 @@ bool http_server_listen(http_server_ref server) {
                     HI_DEBUG("client %d saying his goodbyes to us", checkedSocket);
                     http_fd_set_nullify_socket(server->clientsFDs, sz);
                 } else {
-                    HI_DEBUG("read %d bytes:\n%s", rawRead, raw);
+                    HI_DEBUG("read %d bytes", rawRead);
+                    
+                    // create request object
+                    http_headers_ref request = http_headers_init_with_request(raw, (http_size_t)rawRead);
+                    
+                    // populate it with IP info
+                    char* ipAddress = NULL;
+                    http_port_t ipPort = 8080;
+                    
+                    if (server->useIPv6)
+                        http_getpeerinfo6(checkedSocket, &ipAddress, &ipPort);
+                    else
+                        http_getpeerinfo(checkedSocket, &ipAddress, &ipPort);
+                    
+                    // save IP info
+                    http_headers_set_client_info(request, ipAddress, ipPort);
+                    free(ipAddress);
+                    
+                    HI_DEBUG("headers:");
+                    http_headers_debug_dump(request);
+                    
+                    // prepare and send response
+                    
+                    const char* userAgentString = http_headers_get(request, "User-Agent");
+                    char* resp = calloc(300, sizeof(char));
+                    
+                    sprintf(resp, "Your user agent is %s.", HI_IF_NULL(userAgentString, "unknown, sorry for that"));
+                    
+                    // don't need the headers anymore
+                    http_headers_release(request);
+                    
+                    // notice that response DEALLOCATES THE BODY ON ITS OWN
+                    http_headers_ref response = http_headers_init_with_response(200, "text/plain", resp, (http_size_t)strlen(resp));
+                    
+                    http_size_t headersSentSize = 0;
+                    char* headersSent = http_headers_get_response(response, &headersSentSize);
+                    
+                    // send data
+                    send(checkedSocket, headersSent, headersSentSize, 0);
+                    send(checkedSocket, resp, strlen(resp), 0);
+                    
+                    // goodbye, response
+                    http_headers_release(response);
                     
                     // TODO: support other responses
-                    const char* resp = "HTTP/1.1 403 Forbidden\r\nServer: http_server/0.1\r\nContent-Type: text/plain\r\nContent-Length: 4\r\nConnection: close\r\n\r\n403\n";
-                    send(checkedSocket, resp, strlen(resp), 0);
+                    // TODO: handle properly
                 }
             }
         }
