@@ -110,35 +110,62 @@ typedef http_headers_ref (*http_callback_t)(const http_headers_ref,
 //
 // http_headers_ref: HTTP headers methods
 //
+
+/// initializes boilerplate HTTP/1.1 request (used internally)
 http_headers_ref http_headers_init_with_request(const char* raw,
                                                 const http_size_t rawSize);
+///
+/// initializes a HTTP/1.1 response with the specified status code and content. Please
+/// note that the resulting instance of http_headers_ref will NOT contain a copy of the
+/// specified body content, but rather a direct pointer. If you need to deallocate body
+/// content after the response instance is deallocated, make sure to specify a valid
+/// deallocator function name as the last argument. Otherwise, keep the last argument
+/// NULL.
+///
 http_headers_ref http_headers_init_with_response(const http_status_t status,
                                                  const char* contentType,
                                                  void* body,
                                                  const http_size_t bodySize,
                                                  const http_deallocator_t bodyDLC);
-http_headers_ref http_headers_init_empty(void);
 
+/// retreives the value of the specified header or NULL if it doesn't exist
 const char* http_headers_get(const http_headers_ref headers,
                              const char* key);
 
+/// sets the value of the specified header. The value cannot be NULL
 bool http_headers_set(http_headers_ref headers,
                       const char* key,
                       const char* value);
+/// convenience wrapper in case if you need to set a numeric value for the specified
+/// header
 bool http_headers_set_int(http_headers_ref headers,
                           const char* key,
                           const http_ssize_t value);
 
+/// sets client IP address info (internally used)
 void http_headers_set_client_info(http_headers_ref headers,
                                   const char* ipAddress,
                                   const http_port_t ipPort);
 
-/// get appropriately formatted HTTP/1.1 response headers
+/// get appropriately formatted HTTP/1.1 response headers (internally used)
 char* http_headers_get_response(const http_headers_ref headers,
                                 http_size_t* sizePtr);
 
+/// gets request or response body
 void* http_headers_get_body(const http_headers_ref headers,
                             http_size_t* sizePtr);
+
+/// gets request type (GET, POST, etc)
+const char* http_headers_get_request_type(const http_headers_ref headers);
+
+/// gets request URL (relative, e.g. /hello.txt)
+const char* http_headers_get_request_url(const http_headers_ref headers);
+
+/// gets client's IP address (request-only)
+const char* http_headers_get_client_info(const http_headers_ref headers);
+
+/// gets client's requested HTTP version
+const char* http_headers_get_request_version(const http_headers_ref headers);
 
 void http_headers_debug_dump(http_headers_ref headers);
 
@@ -148,13 +175,22 @@ void http_headers_release(http_headers_ref headers);
 // http_server_ref: HTTP server methods
 //
 
+/// initializes a new instance of the HTTP server object listening on the specified
+/// IPv4 address
 http_server_ref http_server_init_ipv4(const char* ipAddress,
                                       const http_port_t ipPort);
 
+///
+/// sets the callback reacting to each user request to the HTTP server. You might
+/// probably want to pass some additional data to the double-parameter only callback,
+/// so to do that make sure to specify a valid pointer that will be living in parallel
+/// with the HTTP server as the last argument
+///
 void http_server_set_callback(http_server_ref server,
                               const http_callback_t cb,
                               void* additionalData);
 
+/// starts listening for connection (event loop)
 bool http_server_listen(http_server_ref server);
 
 void http_server_release(http_server_ref server);

@@ -327,6 +327,22 @@ void http_headers_set_client_info(http_headers_ref headers,
     }
 }
 
+const char* http_headers_get_request_type(const http_headers_ref headers) {
+    return (headers ? headers->requestType : NULL);
+}
+
+const char* http_headers_get_request_url(const http_headers_ref headers) {
+    return (headers ? headers->requestURL : NULL);
+}
+
+const char* http_headers_get_request_version(const http_headers_ref headers) {
+    return (headers ? headers->requestVersion : "HTTP/1.1");
+}
+
+const char* http_headers_get_client_info(const http_headers_ref headers) {
+    return (headers ? headers->ipAddress : NULL);
+}
+
 char* http_headers_get_response(const http_headers_ref headers,
                                 http_size_t* sizePtr) {
     if (!headers) {
