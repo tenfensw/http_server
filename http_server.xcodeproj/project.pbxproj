@@ -3,15 +3,21 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 48;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		2723784929ABACBA0059E2AA /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 2723784829ABACBA0059E2AA /* main.c */; };
-		2723785129ABACDA0059E2AA /* server.c in Sources */ = {isa = PBXBuildFile; fileRef = 2723784F29ABACDA0059E2AA /* server.c */; };
-		2723785529ABAFD30059E2AA /* wrappers.c in Sources */ = {isa = PBXBuildFile; fileRef = 2723785329ABAFD30059E2AA /* wrappers.c */; };
-		2723785829ABB8F30059E2AA /* fds.c in Sources */ = {isa = PBXBuildFile; fileRef = 2723785629ABB8F30059E2AA /* fds.c */; };
-		274DD7E429ABDA1700D06266 /* headers.c in Sources */ = {isa = PBXBuildFile; fileRef = 274DD7E229ABDA1700D06266 /* headers.c */; };
+		274DD7F629AC11C000D06266 /* server.c in Sources */ = {isa = PBXBuildFile; fileRef = 2723784F29ABACDA0059E2AA /* server.c */; };
+		274DD7F729AC11C000D06266 /* http_server.h in Headers */ = {isa = PBXBuildFile; fileRef = 2723785029ABACDA0059E2AA /* http_server.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		274DD7F829AC11C000D06266 /* server.h in Headers */ = {isa = PBXBuildFile; fileRef = 2723785229ABAD580059E2AA /* server.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		274DD7F929AC11C000D06266 /* wrappers.c in Sources */ = {isa = PBXBuildFile; fileRef = 2723785329ABAFD30059E2AA /* wrappers.c */; };
+		274DD7FA29AC11C000D06266 /* wrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 2723785429ABAFD30059E2AA /* wrappers.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		274DD7FB29AC11C000D06266 /* fds.c in Sources */ = {isa = PBXBuildFile; fileRef = 2723785629ABB8F30059E2AA /* fds.c */; };
+		274DD7FC29AC11C000D06266 /* fds.h in Headers */ = {isa = PBXBuildFile; fileRef = 2723785729ABB8F30059E2AA /* fds.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		274DD7FD29AC11C000D06266 /* headers.c in Sources */ = {isa = PBXBuildFile; fileRef = 274DD7E229ABDA1700D06266 /* headers.c */; };
+		274DD7FE29AC11C000D06266 /* headers.h in Headers */ = {isa = PBXBuildFile; fileRef = 274DD7E329ABDA1700D06266 /* headers.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		274DD80029AC11E900D06266 /* libhttp_server.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 274DD7E929AC11B100D06266 /* libhttp_server.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,7 +33,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2723784529ABACBA0059E2AA /* http_server */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = http_server; sourceTree = BUILT_PRODUCTS_DIR; };
+		2723784529ABACBA0059E2AA /* http */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = http; sourceTree = BUILT_PRODUCTS_DIR; };
 		2723784829ABACBA0059E2AA /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		2723784F29ABACDA0059E2AA /* server.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = server.c; sourceTree = "<group>"; };
 		2723785029ABACDA0059E2AA /* http_server.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = http_server.h; sourceTree = "<group>"; };
@@ -38,10 +44,19 @@
 		2723785729ABB8F30059E2AA /* fds.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fds.h; sourceTree = "<group>"; };
 		274DD7E229ABDA1700D06266 /* headers.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = headers.c; sourceTree = "<group>"; };
 		274DD7E329ABDA1700D06266 /* headers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = headers.h; sourceTree = "<group>"; };
+		274DD7E929AC11B100D06266 /* libhttp_server.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libhttp_server.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		2723784229ABACBA0059E2AA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				274DD80029AC11E900D06266 /* libhttp_server.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		274DD7E629AC11B100D06266 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -56,13 +71,15 @@
 			children = (
 				2723784729ABACBA0059E2AA /* http_server */,
 				2723784629ABACBA0059E2AA /* Products */,
+				274DD7FF29AC11E900D06266 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
 		2723784629ABACBA0059E2AA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2723784529ABACBA0059E2AA /* http_server */,
+				2723784529ABACBA0059E2AA /* http */,
+				274DD7E929AC11B100D06266 /* libhttp_server.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -84,12 +101,34 @@
 			path = http_server;
 			sourceTree = "<group>";
 		};
+		274DD7FF29AC11E900D06266 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		274DD7E729AC11B100D06266 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				274DD7FC29AC11C000D06266 /* fds.h in Headers */,
+				274DD7F729AC11C000D06266 /* http_server.h in Headers */,
+				274DD7F829AC11C000D06266 /* server.h in Headers */,
+				274DD7FA29AC11C000D06266 /* wrappers.h in Headers */,
+				274DD7FE29AC11C000D06266 /* headers.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
-		2723784429ABACBA0059E2AA /* http_server */ = {
+		2723784429ABACBA0059E2AA /* http */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2723784C29ABACBA0059E2AA /* Build configuration list for PBXNativeTarget "http_server" */;
+			buildConfigurationList = 2723784C29ABACBA0059E2AA /* Build configuration list for PBXNativeTarget "http" */;
 			buildPhases = (
 				2723784129ABACBA0059E2AA /* Sources */,
 				2723784229ABACBA0059E2AA /* Frameworks */,
@@ -99,10 +138,27 @@
 			);
 			dependencies = (
 			);
+			name = http;
+			productName = http_server;
+			productReference = 2723784529ABACBA0059E2AA /* http */;
+			productType = "com.apple.product-type.tool";
+		};
+		274DD7E829AC11B100D06266 /* http_server */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 274DD7EA29AC11B100D06266 /* Build configuration list for PBXNativeTarget "http_server" */;
+			buildPhases = (
+				274DD7E529AC11B100D06266 /* Sources */,
+				274DD7E629AC11B100D06266 /* Frameworks */,
+				274DD7E729AC11B100D06266 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
 			name = http_server;
 			productName = http_server;
-			productReference = 2723784529ABACBA0059E2AA /* http_server */;
-			productType = "com.apple.product-type.tool";
+			productReference = 274DD7E929AC11B100D06266 /* libhttp_server.a */;
+			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
 
@@ -117,10 +173,14 @@
 						CreatedOnToolsVersion = 9.1;
 						ProvisioningStyle = Automatic;
 					};
+					274DD7E829AC11B100D06266 = {
+						CreatedOnToolsVersion = 9.1;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = 2723784029ABACBA0059E2AA /* Build configuration list for PBXProject "http_server" */;
-			compatibilityVersion = "Xcode 8.0";
+			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -131,7 +191,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				2723784429ABACBA0059E2AA /* http_server */,
+				2723784429ABACBA0059E2AA /* http */,
+				274DD7E829AC11B100D06266 /* http_server */,
 			);
 		};
 /* End PBXProject section */
@@ -141,11 +202,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2723785129ABACDA0059E2AA /* server.c in Sources */,
-				2723785529ABAFD30059E2AA /* wrappers.c in Sources */,
 				2723784929ABACBA0059E2AA /* main.c in Sources */,
-				2723785829ABB8F30059E2AA /* fds.c in Sources */,
-				274DD7E429ABDA1700D06266 /* headers.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		274DD7E529AC11B100D06266 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				274DD7FB29AC11C000D06266 /* fds.c in Sources */,
+				274DD7F629AC11C000D06266 /* server.c in Sources */,
+				274DD7FD29AC11C000D06266 /* headers.c in Sources */,
+				274DD7F929AC11C000D06266 /* wrappers.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -186,7 +254,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -200,7 +268,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -241,7 +309,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -249,7 +317,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 			};
@@ -271,6 +339,24 @@
 			};
 			name = Release;
 		};
+		274DD7EB29AC11B100D06266 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		274DD7EC29AC11B100D06266 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -283,11 +369,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2723784C29ABACBA0059E2AA /* Build configuration list for PBXNativeTarget "http_server" */ = {
+		2723784C29ABACBA0059E2AA /* Build configuration list for PBXNativeTarget "http" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2723784D29ABACBA0059E2AA /* Debug */,
 				2723784E29ABACBA0059E2AA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		274DD7EA29AC11B100D06266 /* Build configuration list for PBXNativeTarget "http_server" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				274DD7EB29AC11B100D06266 /* Debug */,
+				274DD7EC29AC11B100D06266 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
