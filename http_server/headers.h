@@ -28,9 +28,9 @@ struct http_headers_s {
     char* requestType; // "GET", "POST", etc
     
     // raw body contents
-    char* body;
-    // raw body size
-    http_size_t bodySize;
+    void* body;
+    // raw body deallocator
+    http_deallocator_t bodyDLC;
     
     // client IP address
     char* ipAddress;

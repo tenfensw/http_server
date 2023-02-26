@@ -40,6 +40,10 @@
 typedef uint32_t http_size_t;
 typedef int32_t http_ssize_t;
 
+/// deallocator callback type for http_headers_ref raw data
+/// memory management
+typedef void (*http_deallocator_t)(void*);
+
 /// HTTP server port value
 typedef uint16_t http_port_t;
 
@@ -106,8 +110,9 @@ http_headers_ref http_headers_init_with_request(const char* raw,
                                                 const http_size_t rawSize);
 http_headers_ref http_headers_init_with_response(const http_status_t status,
                                                  const char* contentType,
-                                                 char* body,
-                                                 const http_size_t bodySize);
+                                                 void* body,
+                                                 const http_size_t bodySize,
+                                                 const http_deallocator_t bodyDLC);
 http_headers_ref http_headers_init_empty(void);
 
 const char* http_headers_get(const http_headers_ref headers,
@@ -124,8 +129,12 @@ void http_headers_set_client_info(http_headers_ref headers,
                                   const char* ipAddress,
                                   const http_port_t ipPort);
 
-char* http_headers_get_response(http_headers_ref headers,
+/// get appropriately formatted HTTP/1.1 response headers
+char* http_headers_get_response(const http_headers_ref headers,
                                 http_size_t* sizePtr);
+
+void* http_headers_get_body(const http_headers_ref headers,
+                            http_size_t* sizePtr);
 
 void http_headers_debug_dump(http_headers_ref headers);
 

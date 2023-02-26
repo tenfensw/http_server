@@ -222,7 +222,7 @@ bool http_server_listen(http_server_ref server) {
                     http_headers_release(request);
                     
                     // notice that response DEALLOCATES THE BODY ON ITS OWN
-                    http_headers_ref response = http_headers_init_with_response(200, "text/plain", resp, (http_size_t)strlen(resp));
+                    http_headers_ref response = http_headers_init_with_response(200, "text/plain", resp, (http_size_t)strlen(resp), free);
                     
                     http_size_t headersSentSize = 0;
                     char* headersSent = http_headers_get_response(response, &headersSentSize);

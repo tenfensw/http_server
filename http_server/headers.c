@@ -6,6 +6,7 @@
 //  Copyright © 2023 Tim K. All rights reserved.
 //
 
+#include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
 #include <sys/socket.h>
@@ -136,11 +137,12 @@ bool http_headers_parse_request(http_headers_ref headers,
             bool endOfHeaders = false;
             
             while (keySize < HTTP_HEADER_LENGTH_MAX) {
-                if (current == '\r' || current == '\n') {
+                if (current == '\n') {
                     // end of headers found
                     endOfHeaders = true;
                     break;
-                }
+                } else if (current == '\r')
+                    continue;
                 
                 current = raw[sz++];
                 
@@ -152,6 +154,28 @@ bool http_headers_parse_request(http_headers_ref headers,
             
             if (endOfHeaders) {
                 free(key);
+               
+                // if GET, then nothing left to do
+                // TODO: HEAD, DELETE, OPTIONS also needs nothing in body
+                if (strcmp(headers->requestType, "GET") != 0) {
+                    sz++;
+                    
+                    // read the body
+                    http_size_t leftToRead = rawSize - sz;
+                    const char* rawCL = http_headers_get(headers, "Content-Length");
+                    
+                    // if specified, use Content-Length
+                    if (rawCL)
+                        leftToRead = (http_size_t)atoi(rawCL);
+                    
+                    char* body = calloc(leftToRead, sizeof(char));
+                    memcpy(body, raw + sz, leftToRead);
+                    
+                    // save read body into headers
+                    headers->body = body;
+                    headers->bodyDLC = (http_deallocator_t)free;
+                }
+                
                 break;
             }
             
@@ -201,8 +225,9 @@ http_headers_ref http_headers_init_with_request(const char* raw,
 
 http_headers_ref http_headers_init_with_response(const http_status_t status,
                                                  const char* contentType,
-                                                 char* body,
-                                                 const http_size_t bodySize) {
+                                                 void* body,
+                                                 const http_size_t bodySize,
+                                                 const http_deallocator_t bodyDLC) {
     http_headers_ref headers = hizalloc_struct(http_headers_s);
     
     // set the appropriate headers
@@ -211,8 +236,9 @@ http_headers_ref http_headers_init_with_response(const http_status_t status,
     
     // set body and status
     headers->body = body;
-    headers->statusCode = status;
+    headers->bodyDLC = bodyDLC;
     
+    headers->statusCode = status;
     return headers;
 }
 
@@ -243,6 +269,9 @@ void http_headers_debug_dump(http_headers_ref headers) {
         if (headers->ipAddress)
             HI_DEBUG("requested from %s with port %u", headers->ipAddress,
                      headers->port);
+        
+        if (headers->body)
+            HI_DEBUG("body:\n%s", (char*)headers->body);
     }
 }
 
@@ -298,7 +327,7 @@ void http_headers_set_client_info(http_headers_ref headers,
     }
 }
 
-char* http_headers_get_response(http_headers_ref headers,
+char* http_headers_get_response(const http_headers_ref headers,
                                 http_size_t* sizePtr) {
     if (!headers) {
         HI_DEBUG("NULL headers, cannot generate reponse");
@@ -336,6 +365,19 @@ char* http_headers_get_response(http_headers_ref headers,
     return heading;
 }
 
+void* http_headers_get_body(const http_headers_ref headers,
+                            http_size_t* sizePtr) {
+    // TODO: optimize
+    if (!headers || !headers->body)
+        return NULL;
+    
+    // set size
+    if (sizePtr)
+        (*sizePtr) = atoi(HI_IF_NULL(http_headers_get(headers, "Content-Length"), "0"));
+    
+    return headers->body;
+}
+
 void http_headers_release(http_headers_ref headers) {
     if (!headers)
         return;
@@ -346,10 +388,13 @@ void http_headers_release(http_headers_ref headers) {
     
     // free all strings
     free(headers->ipAddress);
-    free(headers->body);
     free(headers->requestType);
     free(headers->requestURL);
     free(headers->requestVersion);
+    
+    // deallocate raw body if necessary
+    if (headers->bodyDLC)
+        headers->bodyDLC(headers->body);
     
     free(headers);
 }
