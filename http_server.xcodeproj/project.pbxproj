@@ -18,6 +18,7 @@
 		274DD7FD29AC11C000D06266 /* headers.c in Sources */ = {isa = PBXBuildFile; fileRef = 274DD7E229ABDA1700D06266 /* headers.c */; };
 		274DD7FE29AC11C000D06266 /* headers.h in Headers */ = {isa = PBXBuildFile; fileRef = 274DD7E329ABDA1700D06266 /* headers.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		274DD80029AC11E900D06266 /* libhttp_server.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 274DD7E929AC11B100D06266 /* libhttp_server.a */; };
+		274DD81E29AC31F000D06266 /* microformats.h in Headers */ = {isa = PBXBuildFile; fileRef = 274DD81D29AC31F000D06266 /* microformats.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -45,6 +46,8 @@
 		274DD7E229ABDA1700D06266 /* headers.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = headers.c; sourceTree = "<group>"; };
 		274DD7E329ABDA1700D06266 /* headers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = headers.h; sourceTree = "<group>"; };
 		274DD7E929AC11B100D06266 /* libhttp_server.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libhttp_server.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		274DD81829AC31DD00D06266 /* libmicroformats.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmicroformats.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		274DD81D29AC31F000D06266 /* microformats.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = microformats.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,12 +66,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		274DD81529AC31DD00D06266 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		2723783C29ABACBA0059E2AA = {
 			isa = PBXGroup;
 			children = (
+				274DD81C29AC31E100D06266 /* microformats */,
 				274DD80129AC12D300D06266 /* http */,
 				2723784729ABACBA0059E2AA /* http_server */,
 				2723784629ABACBA0059E2AA /* Products */,
@@ -81,6 +92,7 @@
 			children = (
 				2723784529ABACBA0059E2AA /* http */,
 				274DD7E929AC11B100D06266 /* libhttp_server.a */,
+				274DD81829AC31DD00D06266 /* libmicroformats.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -116,6 +128,14 @@
 			path = http;
 			sourceTree = "<group>";
 		};
+		274DD81C29AC31E100D06266 /* microformats */ = {
+			isa = PBXGroup;
+			children = (
+				274DD81D29AC31F000D06266 /* microformats.h */,
+			);
+			path = microformats;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -128,6 +148,14 @@
 				274DD7F829AC11C000D06266 /* server.h in Headers */,
 				274DD7FA29AC11C000D06266 /* wrappers.h in Headers */,
 				274DD7FE29AC11C000D06266 /* headers.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		274DD81629AC31DD00D06266 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				274DD81E29AC31F000D06266 /* microformats.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -168,6 +196,23 @@
 			productReference = 274DD7E929AC11B100D06266 /* libhttp_server.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		274DD81729AC31DD00D06266 /* microformats */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 274DD81929AC31DD00D06266 /* Build configuration list for PBXNativeTarget "microformats" */;
+			buildPhases = (
+				274DD81429AC31DD00D06266 /* Sources */,
+				274DD81529AC31DD00D06266 /* Frameworks */,
+				274DD81629AC31DD00D06266 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = microformats;
+			productName = microformats;
+			productReference = 274DD81829AC31DD00D06266 /* libmicroformats.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -182,6 +227,10 @@
 						ProvisioningStyle = Automatic;
 					};
 					274DD7E829AC11B100D06266 = {
+						CreatedOnToolsVersion = 9.1;
+						ProvisioningStyle = Automatic;
+					};
+					274DD81729AC31DD00D06266 = {
 						CreatedOnToolsVersion = 9.1;
 						ProvisioningStyle = Automatic;
 					};
@@ -201,6 +250,7 @@
 			targets = (
 				2723784429ABACBA0059E2AA /* http */,
 				274DD7E829AC11B100D06266 /* http_server */,
+				274DD81729AC31DD00D06266 /* microformats */,
 			);
 		};
 /* End PBXProject section */
@@ -222,6 +272,13 @@
 				274DD7F629AC11C000D06266 /* server.c in Sources */,
 				274DD7FD29AC11C000D06266 /* headers.c in Sources */,
 				274DD7F929AC11C000D06266 /* wrappers.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		274DD81429AC31DD00D06266 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -365,6 +422,28 @@
 			};
 			name = Release;
 		};
+		274DD81A29AC31DD00D06266 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		274DD81B29AC31DD00D06266 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -391,6 +470,15 @@
 			buildConfigurations = (
 				274DD7EB29AC11B100D06266 /* Debug */,
 				274DD7EC29AC11B100D06266 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		274DD81929AC31DD00D06266 /* Build configuration list for PBXNativeTarget "microformats" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				274DD81A29AC31DD00D06266 /* Debug */,
+				274DD81B29AC31DD00D06266 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

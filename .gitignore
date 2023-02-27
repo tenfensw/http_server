@@ -1,2 +1,9 @@
 xcuserdata
 .DS_Store
+*.o
+*.a
+http/http
+*.dSYM
+*.exe
+*.bin
+*.pdb

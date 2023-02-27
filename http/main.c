@@ -55,7 +55,7 @@ sv_options sv_make_options(const size_t argc, const char** argv) {
     sv_options opts = { true, false, true, false, strdup(HTTP_ADDRESS_PUBLIC), 5454,
         sv_getwd(), NULL };
     
-    for (size_t index = 0; index < argc; index++) {
+    for (size_t index = 1; index < argc; index++) {
         const char* param = argv[index];
         
         if (strlen(param) < 2 && param[0] != '-') {
