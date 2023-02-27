@@ -69,6 +69,7 @@
 		2723783C29ABACBA0059E2AA = {
 			isa = PBXGroup;
 			children = (
+				274DD80129AC12D300D06266 /* http */,
 				2723784729ABACBA0059E2AA /* http_server */,
 				2723784629ABACBA0059E2AA /* Products */,
 				274DD7FF29AC11E900D06266 /* Frameworks */,
@@ -87,7 +88,6 @@
 		2723784729ABACBA0059E2AA /* http_server */ = {
 			isa = PBXGroup;
 			children = (
-				2723784829ABACBA0059E2AA /* main.c */,
 				2723784F29ABACDA0059E2AA /* server.c */,
 				2723785029ABACDA0059E2AA /* http_server.h */,
 				2723785229ABAD580059E2AA /* server.h */,
@@ -106,6 +106,14 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		274DD80129AC12D300D06266 /* http */ = {
+			isa = PBXGroup;
+			children = (
+				2723784829ABACBA0059E2AA /* main.c */,
+			);
+			path = http;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

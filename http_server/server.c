@@ -40,7 +40,10 @@ struct sockaddr_in6 http_make_ipv6(const char* ipAddress,
     
     // parse the IP address first
     // TODO: handle errors correctly
-    inet_pton(AF_INET6, HI_IF_NULL(ipAddress, HTTP_ADDRESS_PUBLIC_IPV6), &result.sin6_addr);
+    if (!inet_pton(AF_INET6, HI_IF_NULL(ipAddress, HTTP_ADDRESS_PUBLIC_IPV6), &result.sin6_addr)) {
+        HI_ERRNO_DEBUG("inet_pton failed, filling ipv6 struct with predefined values");
+        inet_pton(AF_INET6, HTTP_ADDRESS_PUBLIC_IPV6, &result.sin6_addr);
+    }
     
     // adjust port properly
     result.sin6_port = htons(ipPort);
@@ -198,7 +201,7 @@ bool http_server_listen(http_server_ref server) {
     while (true) {
         // zero and then sync fd_set client descriptors
         http_fd_set_sync_descriptors(server->clientsFDs);
-        HI_DEBUG("descriptors syned");
+        HI_DEBUG("descriptors synced");
         
         // to handle the new client immediately
         int newClient = 0;
